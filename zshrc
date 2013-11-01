@@ -72,8 +72,8 @@ fi
 
 
 
-if [ -f $HOME/.zshrc.custom ]; then
-	source $HOME/.zshrc.custom
+if [ -f $HOME/.zshrc.local ]; then
+	source $HOME/.zshrc.local
 fi
 
 #export GEM_HOME=~/.gem/ruby/2.0.0
