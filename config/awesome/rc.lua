@@ -492,9 +492,15 @@ function run_once(cmd)
   awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
 end
 
-run_once("skype")
-run_once("nm-applet")
 run_once("volwheel")
+run_once("nm-applet")
+run_once("clipit")
+-- run_once("batti")
+-- run_once("volumeicon")
+-- run_once("skype")
+-- run_once("radiotray")
+-- run_once("cryptkeeper")
+-- run_once("dropbox")
 
 
 dofile(awful.util.getdir("config") .. "/" .. "rc.lua.local")
