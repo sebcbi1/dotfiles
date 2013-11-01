@@ -4,7 +4,7 @@
 
 theme = {}
 
-theme.wallpaper = "~/Images/wallpapers/walpaper.jpg"
+theme.wallpaper = "~/Images/wallpapers/wallpaper.jpg"
 
 theme.font          = "sans 8"
 

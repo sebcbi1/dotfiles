@@ -91,9 +91,9 @@ end
 -- end
 
 tags = {
-  names = { "main", "dev", "web", "im", "zic" },
-  layout = { layouts[1], layouts[2], layouts[2], layouts[1], layouts[1]}
-  }
+  names = { "main", "dev", "web", "im", "zic", "other" },
+  layout = { layouts[1], layouts[1], layouts[1], layouts[1], layouts[1], layouts[1]}
+}
  
 for s = 1, screen.count() do
   tags[s] = awful.tag(tags.names, s, tags.layout)
@@ -126,14 +126,6 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- Create a textclock widget
 mytextclock = awful.widget.textclock(" %a %d %b  %H:%M ")
 
--- Create a battery widget
-battery = wibox.widget.textbox()
-function getBatteryStatus()
-   local fd= io.popen(awful.util.getdir("config") .. "/battery.sh")
-   local status = fd:read()
-   fd:close()
-   return status
-end
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -206,14 +198,13 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
-    left_layout:add(mylauncher)
+    -- left_layout:add(mylauncher)
     left_layout:add(mytaglist[s])
     left_layout:add(mypromptbox[s])
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
-    right_layout:add(battery)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -237,9 +228,9 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-    awful.key({ }, "XF86AudioRaiseVolume", function () io.popen("amixer set Master 5+") end),
-    awful.key({ }, "XF86AudioLowerVolume", function () io.popen("amixer set Master 5-") end),
-    awful.key({ }, "XF86AudioMute", function () io.popen("amixer set Master toggle") end ),
+    awful.key({ }, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 5+") end),
+    awful.key({ }, "XF86AudioLowerVolume", function () awful.util.spawn("amixer set Master 5-") end),
+    awful.key({ }, "XF86AudioMute", function () awful.util.spawn("amixer set Master toggle") end ),
 
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
@@ -289,6 +280,8 @@ globalkeys = awful.util.table.join(
 
     -- Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
+    awful.key({ modkey },            "d",     function () awful.util.spawn('gmrun') end),
+
 
     awful.key({ modkey }, "x",
               function ()
@@ -395,7 +388,13 @@ awful.rules.rules = {
     { rule = { class = "sublime-text" },
       properties = { tag = tags[1][2] , switchtotag  = tags[1][2] } },
     { rule = { class = "Skype" },
-      properties = { tag = tags[1][4] } },  
+      properties = { tag = tags[1][4] } }, 
+    { rule = { class = "Gmrun" },
+      properties = { floating = true },
+        callback = function (c)
+          c.ontop = true
+          awful.placement.centered(c,nil)
+        end }  
 }
 -- }}}
 
@@ -473,15 +472,6 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- }}}
 
 
--- Battery status timer
-batteryTimer = timer({timeout = 30})
-batteryTimer:connect_signal("timeout", function()
-  battery:set_markup(getBatteryStatus())
-end)
-batteryTimer:start()
-battery:set_markup(getBatteryStatus())
-
-
 -- Autostart
 
 function run_once(cmd)
@@ -493,15 +483,20 @@ function run_once(cmd)
   awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
 end
 
-run_once("volwheel")
+
+function file_exists(name)
+  local f=io.open(name,"r")
+  if f~=nil then io.close(f) return true else return false end
+end
+
+run_once("volumeicon")
 run_once("nm-applet")
 run_once("clipit")
+run_once("dropboxd")
+run_once("cryptkeeper")
 -- run_once("batti")
--- run_once("volumeicon")
 -- run_once("skype")
 -- run_once("radiotray")
--- run_once("cryptkeeper")
--- run_once("dropbox")
 
-
-dofile(awful.util.getdir("config") .. "/" .. "rc.lua.local")
+local loc = awful.util.getdir("config") .. "/" .. "rc.lua.local"
+if file_exists(loc) then dofile(loc) end

@@ -81,5 +81,5 @@ fi
 eval $(keychain --eval --agents ssh -Q --quiet id_ecdsa)
 
 alias ls='ls --color=auto'
-command cowthink $(fortune -e vimtips)
+#command cowthink $(fortune -e vimtips)
 
