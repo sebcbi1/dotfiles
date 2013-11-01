@@ -495,3 +495,6 @@ end
 run_once("skype")
 run_once("nm-applet")
 run_once("volwheel")
+
+
+dofile(awful.util.getdir("config") .. "/" .. "rc.lua.local")
