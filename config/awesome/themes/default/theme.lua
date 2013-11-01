@@ -4,7 +4,7 @@
 
 theme = {}
 
-theme.wallpaper = "/home/sebcbi1/Dropbox/battlestar_galactica.jpg"
+theme.wallpaper = "~/Images/wallpapers/walpaper.jpg"
 
 theme.font          = "sans 8"
 
