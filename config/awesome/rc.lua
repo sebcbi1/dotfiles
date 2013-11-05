@@ -360,10 +360,6 @@ clientbuttons = awful.util.table.join(
     awful.button({ modkey }, 1, awful.mouse.client.move),
     awful.button({ modkey }, 3, awful.mouse.client.resize))
 
--- Set keys
-root.keys(globalkeys)
--- }}}
-
 -- {{{ Rules
 awful.rules.rules = {
     -- All clients will match this rule.
@@ -386,6 +382,8 @@ awful.rules.rules = {
     { rule = { class = "Chromium" },
       properties = { tag = tags[1][3] , switchtotag  = tags[1][3] } },
     { rule = { class = "sublime-text" },
+      properties = { tag = tags[1][2] , switchtotag  = tags[1][2] } },
+    { rule = { class = "Subl" },
       properties = { tag = tags[1][2] , switchtotag  = tags[1][2] } },
     { rule = { class = "Skype" },
       properties = { tag = tags[1][4] } }, 
@@ -500,3 +498,7 @@ run_once("cryptkeeper")
 
 local loc = awful.util.getdir("config") .. "/" .. "rc.lua.local"
 if file_exists(loc) then dofile(loc) end
+
+-- Set keys
+root.keys(globalkeys)
+-- }}}
